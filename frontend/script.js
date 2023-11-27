@@ -1,17 +1,15 @@
-// Führe einen GET-Request durch
-fetch('http://127.0.0.1:5000/files')
-    .then(response => response.json())
-    .then(data => {
-        // 'data' ist das Ergebnis der Anfrage, wandele es in eine Liste um
-        console.log(data);
+function render_files() {
+    document.getElementById("files").innerHTML = ""
+    fetch('http://127.0.0.1:5000/files')
+        .then(response => response.json())
+        .then(data => {
 
-        // Gib die Liste aus
-
-
-        data.files.forEach((element) => {
-            document.getElementById("files").innerHTML += `<li onclick='downloadFile("${element}")' >${element}</li>`
+            data.files.forEach((element) => {
+                document.getElementById("files").innerHTML += `<li style="display: flex" ><p onclick='downloadFile("${element}")'>${element}</p> <img onclick='removeFile("${element}")' src="http://127.0.0.1:5000/delete"></li>`
+            })
         })
-    })
+}
+
 
 
     function uploadDatei() {
@@ -28,7 +26,10 @@ fetch('http://127.0.0.1:5000/files')
                 body: formData
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                render_files()
+                
+            })
             .catch(error => console.error('Fehler:', error));
         } else {
             console.log('Bitte eine Datei auswählen.');
@@ -50,20 +51,23 @@ fetch('http://127.0.0.1:5000/files')
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            console.log(response)
             return response.json();
         })
         .then(data => {
             // Erstelle einen Blob-URL und erstelle ein unsichtbares a-Element für den Download
             
             if (data.succes === true) {
-                let download = document.createElement('a');
-                download.href = "http://127.0.0.1:5000/download_file";
-                download.innerHTML = "download"
-                download.id = "huhn"
-                download.download = fileName;
-                document.body.appendChild(download);
-                download.click();
+                // let download = document.createElement('a');
+                // download.href = "http://127.0.0.1:5000/download_file";
+                // download.innerHTML = "download"
+                // download.id = "huhn"
+                // download.download = fileName;
+                // download.style.view = "none";
+                // document.body.appendChild(download);
+                
+                // document.getElementById("huhn").checkVisibility()
+                // document.body.remove(download)
+                alert("kannst")
             }
         })
         .catch(error => {
@@ -72,5 +76,26 @@ fetch('http://127.0.0.1:5000/files')
 
     }
     
+    function removeFile(file_name) {
+        // Der Schlüssel, den du entfernen möchtest
+        const data = { file_to_remove: file_name };
     
-    
+        fetch('http://localhost:5000/remove_file', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+
+            return response.json();
+        })
+        .then(data => {
+            // Erstelle einen Blob-URL und erstelle ein unsichtbares a-Element für den Download
+
+            render_files()
+            
+        })
+      }    
+    render_files()

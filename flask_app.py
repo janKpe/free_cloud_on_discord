@@ -22,6 +22,11 @@ def index():
     return send_file("frontend\index.html")
 
 
+@app.route("/delete")
+def delete():
+    return send_file("frontend/assets/delete.svg")
+
+
 @app.route("/script.js")
 def scriptjs():
     return send_file("frontend\script.js")
@@ -40,6 +45,9 @@ def upload():
 
     datei_pfad = "./in/" + request.form['file_name']
     datei.save(datei_pfad)
+    while os.path.exists(datei_pfad):
+        pass
+
     return jsonify({"success": True})
 
 
@@ -65,6 +73,33 @@ def download_file():
 
     return response
 
+@app.route("/remove_file", methods=["POST"])
+def remove_file():
+    # Erhalte den Schlüssel aus den Request-Parametern
+    key_to_remove = request.json.get('file_to_remove')
+
+    if not key_to_remove:
+        return jsonify({"error": "Der Parameter 'file_to_remove' fehlt im Request."}), 400
+
+    with open("./files.json", 'r') as file:
+        # Lade den JSON-Inhalt
+        data = json.load(file)
+
+    # Überprüfe, ob der Schlüssel vorhanden ist, bevor er entfernt wird
+    if key_to_remove in data:
+        del data[key_to_remove]
+        print(f"Schlüssel '{key_to_remove}' wurde erfolgreich aus der JSON-Datei entfernt.")
+        # Optional: Sende eine Bestätigung als JSON-Antwort
+        with open("./files.json", 'w') as file:
+            json.dump(data, file, indent=4)
+
+        return jsonify({"success": True})
+    else:
+        print(f"Der Schlüssel '{key_to_remove}' ist nicht in der JSON-Datei vorhanden.")
+        # Optional: Sende eine Fehlermeldung als JSON-Antwort
+        return jsonify({"error": f"Der Schlüssel '{key_to_remove}' ist nicht in der JSON-Datei vorhanden."}), 404
+
+    # Öffne die JSON-Datei zum Schreiben und schreibe die aktualisierten Daten
 
 if __name__ == "__main__":
     app.run(port=5000)
