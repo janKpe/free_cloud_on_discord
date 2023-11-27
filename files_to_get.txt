@@ -1,1 +1,0 @@
-grose detei.txt
