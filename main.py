@@ -5,6 +5,8 @@ from functions.zusammenfügen import combine_chunks
 import os
 import json
 import requests
+from flask import Flask, jsonify
+from flask_cors import CORS
 
 bot = discord.Bot()
 
@@ -80,4 +82,19 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="free cloud"))
     slow_count.start()
 
-bot.run("MTE3ODYwNzcyMTc2MzgzMTg0OQ.GkXuXl.Dstj83-GDrUCvVgdpxZWf1W7S2TVOgHmfBxLOc") # run the bot with the token
+
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/files')
+def hello_world():
+    with open("files.json", "r") as data_file:
+        json_file = json.load(data_file)
+        return jsonify({"files": list(json_file.keys())})
+
+
+
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
+    bot.run("MTE3ODYwNzcyMTc2MzgzMTg0OQ.GySYfj.F96sgV6iXXwQKqUfwrYJZu7Be5hs16v8eSe7vI") 
