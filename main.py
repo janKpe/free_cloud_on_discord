@@ -5,13 +5,12 @@ from functions.zusammenfügen import combine_chunks
 import os
 import json
 import requests
-from flask import Flask, jsonify
-from flask_cors import CORS
+
 
 bot = discord.Bot()
 
 
-@tasks.loop(seconds=10.0)
+@tasks.loop(seconds=1.0)
 async def slow_count():
     print("loop")
 
@@ -44,18 +43,20 @@ async def slow_count():
 
     with open("files_to_get.txt", "r") as file:
         file_content = file.read()
+        print(file_content)
         empty = file_content == ""
+        print(empty)
         file.seek(0)
         files_to_get = [line.strip() for line in file.readlines()]
         
-    if empty == "":
+    if empty:
         pass
     else:
+        print("df")
         with open("files.json", "r") as data_file:
             json_file = json.load(data_file)
         
-        
-
+    
         for file_to_get in files_to_get:
             for guild in bot.guilds:
                 for channel in guild.channels:
@@ -63,8 +64,8 @@ async def slow_count():
                         chunk_count = 1
                         for msg_id in json_file[file_to_get]:
                             message = await channel.fetch_message(msg_id)     
-                            # print(message)
-                            # print(message.attachments[0].url)
+                            print(message)
+                            print(message.attachments[0].url)
                             request = requests.get(message.attachments[0].url)
                             with open("./chunks_to_combine/chunk_" + str(chunk_count), "wb") as chunk_file:
                                 chunk_file.write(request.content)
@@ -83,18 +84,5 @@ async def on_ready():
     slow_count.start()
 
 
-
-app = Flask(__name__)
-CORS(app)
-
-@app.route('/files')
-def hello_world():
-    with open("files.json", "r") as data_file:
-        json_file = json.load(data_file)
-        return jsonify({"files": list(json_file.keys())})
-
-
-
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
-    bot.run("MTE3ODYwNzcyMTc2MzgzMTg0OQ.GySYfj.F96sgV6iXXwQKqUfwrYJZu7Be5hs16v8eSe7vI") 
+    bot.run("MTE3ODYwNzcyMTc2MzgzMTg0OQ.GHNyLZ.rZxdnfdngnltIJnt3F462sPe74vYzpM-aiDwHI") 
