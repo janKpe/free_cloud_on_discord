@@ -58,31 +58,25 @@ def download_file():
 
 @app.route("/remove_file", methods=["POST"])
 def remove_file():
-    # Erhalte den Schlüssel aus den Request-Parametern
     key_to_remove = request.json.get('file_to_remove')
 
     if not key_to_remove:
         return jsonify({"error": "Der Parameter 'file_to_remove' fehlt im Request."}), 400
 
     with open("./files.json", 'r') as file:
-        # Lade den JSON-Inhalt
         data = json.load(file)
 
-    # Überprüfe, ob der Schlüssel vorhanden ist, bevor er entfernt wird
     if key_to_remove in data:
         del data[key_to_remove]
         print(f"Schlüssel '{key_to_remove}' wurde erfolgreich aus der JSON-Datei entfernt.")
-        # Optional: Sende eine Bestätigung als JSON-Antwort
         with open("./files.json", 'w') as file:
             json.dump(data, file, indent=4)
 
         return jsonify({"success": True})
     else:
         print(f"Der Schlüssel '{key_to_remove}' ist nicht in der JSON-Datei vorhanden.")
-        # Optional: Sende eine Fehlermeldung als JSON-Antwort
         return jsonify({"error": f"Der Schlüssel '{key_to_remove}' ist nicht in der JSON-Datei vorhanden."}), 404
 
-    # Öffne die JSON-Datei zum Schreiben und schreibe die aktualisierten Daten
 
 if __name__ == "__main__":
     app.run(port=5000)
