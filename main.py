@@ -6,6 +6,11 @@ import os
 import json
 import requests
 
+paths = ["./in/", "./out/", "./chunks/", "./chunks_to_combine/"]
+
+for dir_path in paths:
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
 
 bot = discord.Bot()
 
@@ -13,8 +18,13 @@ def extract_number(file_name):
     return int(''.join(filter(str.isdigit, file_name)))
 
 
+
+
 @tasks.loop(seconds=1.0)
 async def slow_count():
+    if not os.path.exists("./in/"):
+        os.makedirs("./in/")
+    
     files = os.listdir("./in/")
     if files != []:
         for file in files:
