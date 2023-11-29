@@ -4,10 +4,8 @@ import json
 import os
 import time
 
-
 app = Flask(__name__)
 CORS(app)
-
 
 def leere_ordner(ordnerpfad):
     for datei in os.listdir(ordnerpfad):
@@ -18,29 +16,11 @@ def leere_ordner(ordnerpfad):
         except Exception as e:
             print(f"Fehler beim Löschen von {dateipfad}: {e}")
 
-@app.route("/")
-def index():
-    return send_file("frontend\index.html")
-
-@app.route("/script.js")
-def scriptjs():
-    return send_file("frontend\script.js")
-
-@app.route("/style.css")
-def stylecss():
-    return send_file("frontend\style.css")
-
-@app.route("/delete")
-def delete():
-    return send_file("frontend/assets/delete.svg")
-
-
 @app.route('/files')
 def file():
     with open("files.json", "r") as data_file:
         json_file = json.load(data_file)
         return jsonify({"files": list(json_file.keys())})
-
 
 
 @app.route('/upload', methods=['POST'])
