@@ -1,2 +1,4 @@
-__pycache__/
-files/
+test.py
+test/
+frontend/node_modules/
+*/__pycache__/ 

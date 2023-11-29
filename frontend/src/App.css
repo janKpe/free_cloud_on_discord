@@ -1,0 +1,72 @@
+
+ .File {
+    color: #F0ECE5;
+    background-color: #31304D;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 800px;
+    border-radius: 5px;
+  }
+
+  .File:hover {
+    background-color: #3b3a5a;
+  }
+
+  .container {
+    cursor: pointer;
+    width: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+
+
+  .File p {
+    margin-left: 20px;
+  }
+
+  #FileList {
+    display: grid;
+    justify-content: center;
+    
+  }
+
+.RightAlign {
+  margin-left: auto;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.none {
+  display: none
+}
+
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+
+.FileInput {
+  color: #F0ECE5;
+  background-color: #31304D;
+  border-color: #31304D;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  width: 300px; /* Anpassen der Breite nach Bedarf */
+  height: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+.FileInput:hover {
+  background-color: #3b3a5a;
+}

@@ -9,24 +9,25 @@ import requests
 
 bot = discord.Bot()
 
+def extract_number(file_name):
+    return int(''.join(filter(str.isdigit, file_name)))
+
 
 @tasks.loop(seconds=1.0)
 async def slow_count():
-    print("loop")
-
-    files = os.listdir("./in")
+    files = os.listdir("./in/")
     if files != []:
         for file in files:
             split_large_file("./in/" + file, "chunks", 10)
-
             for guild in bot.guilds:
                 for channel in guild.channels:
                     if type(channel) == discord.channel.TextChannel:
                         message_ids = []
-                        for discord_file_pth in os.listdir("./chunks"):
+                        discord_files = os.listdir("./chunks/")
+                        discord_files = sorted(discord_files, key=extract_number)
+                        for discord_file_pth in discord_files:
                             discord_file = discord.File("./chunks/" + discord_file_pth)
                             message = await channel.send(file=discord_file)
-
                             message_ids.append(message.id)
                             os.remove("./chunks/" + discord_file_pth)
                         os.remove("./in/" + file)
@@ -43,16 +44,13 @@ async def slow_count():
 
     with open("files_to_get.txt", "r") as file:
         file_content = file.read()
-        print(file_content)
         empty = file_content == ""
-        print(empty)
         file.seek(0)
         files_to_get = [line.strip() for line in file.readlines()]
         
     if empty:
         pass
     else:
-        print("df")
         with open("files.json", "r") as data_file:
             json_file = json.load(data_file)
         

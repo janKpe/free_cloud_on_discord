@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import json
 import os
+import time
 
 
 app = Flask(__name__)
@@ -21,15 +22,18 @@ def leere_ordner(ordnerpfad):
 def index():
     return send_file("frontend\index.html")
 
+@app.route("/script.js")
+def scriptjs():
+    return send_file("frontend\script.js")
+
+@app.route("/style.css")
+def stylecss():
+    return send_file("frontend\style.css")
 
 @app.route("/delete")
 def delete():
     return send_file("frontend/assets/delete.svg")
 
-
-@app.route("/script.js")
-def scriptjs():
-    return send_file("frontend\script.js")
 
 @app.route('/files')
 def file():
@@ -42,7 +46,6 @@ def file():
 @app.route('/upload', methods=['POST'])
 def upload():
     datei = request.files["data"]
-
     datei_pfad = "./in/" + request.form['file_name']
     datei.save(datei_pfad)
     while os.path.exists(datei_pfad):
