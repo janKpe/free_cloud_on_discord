@@ -1,9 +1,10 @@
-  import deleteIcon from './delete.svg';
-  import downloadIcon from './download.svg'
-  import './App.css';
-  import toast, { Toaster } from 'react-hot-toast';
-  import React, { useState } from 'react';
-  import { Oval } from  'react-loader-spinner'
+import deleteIcon from './delete.svg';
+import downloadIcon from './download.svg'
+import './App.css';
+import toast, { Toaster } from 'react-hot-toast';
+import React, { useState } from 'react';
+import { Oval } from  'react-loader-spinner'
+import { FileUploader } from "react-drag-drop-files";
 
 const notify = (message) => toast(message);
 const host = "http://ssh.jan-kupke.de:5001"
@@ -144,7 +145,7 @@ class FileList extends React.Component {
           <File key={file} name={file} onDelete={this.updateFiles}/>
         ))}
       </div>
-      <FileUploader render={this.updateFiles}/>
+      <FileUploaderComponent render={this.updateFiles}/>
       </div>
       
     );
@@ -152,13 +153,10 @@ class FileList extends React.Component {
 }
 
 
-class FileUploader extends React.Component {
+class FileUploaderComponent extends React.Component {
 
-  uploadFile = () => {
-    const inputElement = document.getElementById('FileInput');
-    let selectedFiles = inputElement.files;
-    selectedFiles = Array.from(selectedFiles)
-
+  uploadFile = (files) => {
+    let selectedFiles = Array.from(files)
     if (selectedFiles.length >= 1) {
       if (selectedFiles.length > 1) {
         notify("uploading your files...")
@@ -177,7 +175,6 @@ class FileUploader extends React.Component {
         .then(response => response.json())
         .then(data => {
           this.props.render();          
-
           })
         .catch(error => console.error('Fehler:', error));
         
@@ -187,18 +184,31 @@ class FileUploader extends React.Component {
     }
   }
 
+
   render() {
     return (
-      <div className='center'>
-        <input type="file" className="FileInput" id='FileInput' multiple/>
-        <button onClick={this.uploadFile} className="FileInput">Upload</button>
-      </div>
-    );
+        <div className='center'>
+          <DragDrop uploadFunction={this.uploadFile}/>
+        </div>)
   }
 }
 
-
-
+function DragDrop(props) {
+  const [file, setFile] = useState(null);
+  const handleChange = (file) => {
+    props.uploadFunction(file);
+    setFile(file);
+  };
+  return (
+    <FileUploader 
+      children={<p>Datei hochladen oder hier ablegen!</p>}
+      classes="FileInput"
+      handleChange={handleChange}
+      // label="Datei hochladen oder hier ablegen!" 
+      hoverTitle="" 
+      multiple={true}/>
+  );
+}
 
 function App() {
   return (<div>
