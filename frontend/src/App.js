@@ -6,7 +6,7 @@
   import { Oval } from  'react-loader-spinner'
 
 const notify = (message) => toast(message);
-const host = "http://localhost:5000"
+const host = "http://ssh.jan-kupke.de:5001"
 
 function removeFile(file_name, onDelete) {
   const data = { file_to_remove: file_name };
@@ -44,22 +44,14 @@ function removeFile(file_name, onDelete) {
     return fetch(`${host}/download`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+	'Content-Type': 'application/json',
       },
+      mode: "no-cors",
       body: JSON.stringify(data),
     })
     .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (data["succes"] === true) {
-        return true;
-      } 
-    })
-    .catch(error => {
+      return true;
+    }).catch(error => {
       console.error('Fehler beim Herunterladen der Datei:', error);
       throw error; // Wiederverwenden des Fehlers für die Aufruferbehandlung
     });
@@ -164,13 +156,19 @@ class FileUploader extends React.Component {
 
   uploadFile = () => {
     const inputElement = document.getElementById('FileInput');
-    const selectedFile = inputElement.files[0];
+    let selectedFiles = inputElement.files;
+    selectedFiles = Array.from(selectedFiles)
 
-    if (selectedFile) {
+    if (selectedFiles.length >= 1) {
+      if (selectedFiles.length > 1) {
+        notify("uploading your files...")
+      } else {
         notify("uploading your file...")
+      }
+      selectedFiles.forEach(element => {
         const formData = new FormData();
-        formData.append('file_name', selectedFile.name);
-        formData.append('data', selectedFile);
+        formData.append('file_name', element.name);
+        formData.append('data', element);
 
         fetch(`${host}/upload`, {
             method: 'POST',
@@ -182,16 +180,17 @@ class FileUploader extends React.Component {
 
           })
         .catch(error => console.error('Fehler:', error));
+        
+      });
     } else {
-        notify("No file selected  ")
-        console.log('Bitte eine Datei auswählen.');
+        notify("No files selected  ")
     }
   }
 
   render() {
     return (
       <div className='center'>
-        <input type="file" className="FileInput" id='FileInput'/>
+        <input type="file" className="FileInput" id='FileInput' multiple/>
         <button onClick={this.uploadFile} className="FileInput">Upload</button>
       </div>
     );
