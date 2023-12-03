@@ -192,7 +192,7 @@ class FileUploaderComponent extends React.Component {
 
   render() {
     return (
-    <div className='center' id='StickyHeader'>
+    <div id='StickyHeader'>
       <DragDrop uploadFunction={this.uploadFile} />
     </div>)  
     }
