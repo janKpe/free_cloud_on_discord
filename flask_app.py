@@ -5,7 +5,7 @@ import os
 import time
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://ssh.jan-kupke.de"], support_credentials=True)
 
 def leere_ordner(ordnerpfad):
     for datei in os.listdir(ordnerpfad):
@@ -16,14 +16,14 @@ def leere_ordner(ordnerpfad):
         except Exception as e:
             print(f"Fehler beim Löschen von {dateipfad}: {e}")
 
-@app.route('/files')
+@app.route('/files/')
 def file():
     with open("files.json", "r") as data_file:
         json_file = json.load(data_file)
         return jsonify({"files": list(json_file.keys())})
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload/', methods=['POST'])
 def upload():
     datei = request.files["data"]
     datei_pfad = "./in/" + request.form['file_name']
@@ -34,11 +34,14 @@ def upload():
     return jsonify({"success": True})
 
 
-@app.route('/download', methods=['POST'])
+@app.route('/download/', methods=["POST"])
 def download_init():
     leere_ordner("./out/")
-    file_name = request.json.get('file_name')
-
+    print("jojo")
+    print(request.data)
+    print(request.content_type)
+    file_name = json.loads(request.data)["file_name"]
+    print(file_name)
     with open("files_to_get.txt", "a") as file:
         file.write(file_name + "\n")
 
@@ -47,7 +50,7 @@ def download_init():
 
     return jsonify({"succes": True})
 
-@app.route("/download_file")
+@app.route("/download_file/")
 def download_file():
     file_name = os.listdir("./out/")[0]
     response = send_file("./out/" + file_name, as_attachment=True)
@@ -79,4 +82,4 @@ def remove_file():
 
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(host="0.0.0.0", port=5001)

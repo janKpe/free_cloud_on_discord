@@ -5,6 +5,11 @@ import toast, { Toaster } from 'react-hot-toast';
 import React, { useState } from 'react';
 import { Oval } from  'react-loader-spinner'
 import { FileUploader } from "react-drag-drop-files";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
 
 const notify = (message) => toast(message);
 const host = "http://ssh.jan-kupke.de:5001"
@@ -140,12 +145,12 @@ class FileList extends React.Component {
 
     return (
       <div>
-      <div id='FileList'>
-        {this.state.files.map((file) => (
-          <File key={file} name={file} onDelete={this.updateFiles}/>
-        ))}
-      </div>
-      <FileUploaderComponent render={this.updateFiles}/>
+        <FileUploaderComponent render={this.updateFiles}/>
+        <div id='FileList'>
+          {this.state.files.map((file) => (
+            <File key={file} name={file} onDelete={this.updateFiles}/>
+          ))}
+        </div>
       </div>
       
     );
@@ -187,10 +192,9 @@ class FileUploaderComponent extends React.Component {
 
   render() {
     return (
-        <div className='center'>
-          <DragDrop uploadFunction={this.uploadFile}/>
-        </div>)
-  }
+    <div className='center'>
+      <DragDrop uploadFunction={this.uploadFile} />
+    </div>)  }
 }
 
 function DragDrop(props) {
@@ -200,20 +204,32 @@ function DragDrop(props) {
     setFile(file);
   };
   return (
-    <FileUploader 
-      children={<p>Datei hochladen oder hier ablegen!</p>}
-      classes="FileInput"
-      handleChange={handleChange}
-      // label="Datei hochladen oder hier ablegen!" 
-      hoverTitle="" 
-      multiple={true}/>
+      <FileUploader 
+        children={<p>Upload file or drop it here!</p>}
+        classes="FileInput"
+        handleChange={handleChange}
+        hoverTitle="" 
+        multiple={true}/>
   );
 }
 
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div>Hello world!</div>,
+  },
+]);
+
+function Lachs() {
+  return <h2>laaaaaaaach</h2>
+}
 function App() {
-  return (<div>
+  return (
+    // <RouterProvider router={router} />
     <FileList/>
-  </div>)
+  ) 
+
 }
 
 export default App;

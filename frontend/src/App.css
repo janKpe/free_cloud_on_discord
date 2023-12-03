@@ -1,36 +1,33 @@
+/* Default styling for larger screens */
+.File {
+  color: #F0ECE5;
+  background-color: #31304D;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 800px;
+  border-radius: 5px;
+}
 
- .File {
-    color: #F0ECE5;
-    background-color: #31304D;
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    width: 800px;
-    border-radius: 5px;
-  }
+.File:hover {
+  background-color: #3b3a5a;
+}
 
-  .File:hover {
-    background-color: #3b3a5a;
-  }
+.container {
+  cursor: pointer;
+  width: 35px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
 
-  .container {
-    cursor: pointer;
-    width: 35px;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
+.File p {
+  margin-left: 20px;
+}
 
-
-
-  .File p {
-    margin-left: 20px;
-  }
-
-  #FileList {
-    display: grid;
-    justify-content: center;
-    
-  }
+#FileList {
+  display: grid;
+  justify-content: center;
+}
 
 .RightAlign {
   margin-left: auto;
@@ -40,7 +37,7 @@
 }
 
 .none {
-  display: none
+  display: none;
 }
 
 .center {
@@ -59,7 +56,7 @@
   justify-content: center;
   align-items: center;
   margin: 20px;
-  width: 300px; /* Anpassen der Breite nach Bedarf */
+  width: 300px; 
   height: 40px;
   border-radius: 5px;
   cursor: pointer;
@@ -67,7 +64,24 @@
   border: none;
 }
 
-
 .FileInput:hover {
   background-color: #3b3a5a;
+}
+
+@media (max-width: 600px) {
+  .File {
+    width: 100%;
+  }
+
+  .File p {
+    margin-left: 10px;
+  }
+
+  .container {
+    width: 20px;
+  }
+
+  #FileList {
+    grid-template-columns: 1fr;
+  }
 }
