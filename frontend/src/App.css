@@ -47,7 +47,17 @@
   margin-top: 20px;
 }
 
+#FileUploadParrent {
+  height: '100px',;
+  width: '100%';
+  background-color: '#161A30';
+}
 
+#StickyHeader {
+  position: 'sticky';
+  top: 0; 
+  z-index: 100,
+}
 .FileInput {
   color: #F0ECE5;
   background-color: #31304D;

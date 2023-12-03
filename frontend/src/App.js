@@ -192,9 +192,10 @@ class FileUploaderComponent extends React.Component {
 
   render() {
     return (
-    <div className='center'>
+    <div className='center' id='StickyHeader'>
       <DragDrop uploadFunction={this.uploadFile} />
-    </div>)  }
+    </div>)  
+    }
 }
 
 function DragDrop(props) {
@@ -204,12 +205,14 @@ function DragDrop(props) {
     setFile(file);
   };
   return (
-      <FileUploader 
+    <div className='center' id='FileUploadParrent'>
+      <FileUploader
         children={<p>Upload file or drop it here!</p>}
         classes="FileInput"
         handleChange={handleChange}
         hoverTitle="" 
         multiple={true}/>
+    </div>
   );
 }
 
