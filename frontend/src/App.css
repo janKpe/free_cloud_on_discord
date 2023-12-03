@@ -48,13 +48,13 @@
 }
 
 #FileUploadParrent {
-  height: '100px',;
-  width: '100%';
-  background-color: '#161A30';
+  height: 100px;
+  width: 100%;
+  background-color: #161A30;
 }
 
 #StickyHeader {
-  position: 'sticky';
+  position: sticky;
   top: 0; 
   z-index: 100,
 }
