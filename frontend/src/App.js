@@ -1,154 +1,109 @@
-import deleteIcon from './delete.svg';
-import downloadIcon from './download.svg'
-import './App.css';
-import toast, { Toaster } from 'react-hot-toast';
-import React, { useState } from 'react';
-import { Oval } from  'react-loader-spinner'
-import { FileUploader } from "react-drag-drop-files";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import arrowBack from './assets/arrow_back.svg'
+import './style/App.css';
+import toast from 'react-hot-toast';
+import React from 'react';
+import { useParams } from "react-router-dom";
+import { File } from './components/File';
+import { Tile } from './components/Tile';
+import { FileUploaderComponent } from './components/FileUploaderComponent';
 
 
-const notify = (message) => toast(message);
-const host = "http://ssh.jan-kupke.de:5001"
-
-function removeFile(file_name, onDelete) {
-  const data = { file_to_remove: file_name };
-
-  fetch(`${host}/remove_file`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-  })
-  .then(response => {
-
-      return response.json();
-  })
-  .then(data => {
-    onDelete()
-
-  })
-}    
-
-  const download_file = (file_name) => {
-    let download = document.createElement('a');
-    download.href = `${host}/download_file`;
-    download.download = file_name;
-    download.style.display = "none";
-    document.body.appendChild(download);
-    download.click();  
-    document.body.removeChild(download)
-  }
-
-  const init_download = (fileName) => {
-    const data = { file_name: fileName };
-
-    return fetch(`${host}/download`, {
-      method: 'POST',
-      headers: {
-	'Content-Type': 'application/json',
-      },
-      mode: "no-cors",
-      body: JSON.stringify(data),
-    })
-    .then(response => {
-      return true;
-    }).catch(error => {
-      console.error('Fehler beim Herunterladen der Datei:', error);
-      throw error; // Wiederverwenden des Fehlers für die Aufruferbehandlung
-    });
-  }
-
-  function File(props) {
-    const [loading, setLoading] = useState(false);
-
-    const PrepareDownload = (file) => {
-      notify("Preparing Download")
-      setLoading(true);
-
-      init_download(file).then(response => {
-        if (response) {
-          setLoading(false);
-          download_file(file);
-        }
-      })
-    };
-
-    return (
-      <div className='File'>
-        <p>{props.name}</p>
-        <div className='RightAlign'>
-          <Toaster/>
-          <div className='container'>
-            <img src={deleteIcon} alt='delete' onClick={() => removeFile(props.name, props.onDelete)} />
-          </div>
-          <div className='container'>
-          {loading ? (
-            <Oval
-              height={30}
-              width={30}
-              color="#F0ECE5"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-              ariaLabel='oval-loading'
-              secondaryColor="#4fa94d"
-              strokeWidth={2}
-              strokeWidthSecondary={2}/>
-              ) : (
-          <img src={downloadIcon} alt='download' onClick={() => PrepareDownload(props.name)} />
-        )}
-            </div>
-
-        </div>
-      </div>
-    );
-  }
-
+export const notify = (message) => toast(message);
+export const host = "http://ssh.jan-kupke.de:5001"
 
 class FileList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      files: []
+      files: [],
+      folders: []
     };
   }
   
-
   componentDidMount() {
-    this.fetchFiles()
+
+    if (this.props.useParams === true) {
+      this.fetchFiles(this.props.path["path"].replaceAll("@@@", "/"))
+    } else {
+      window.location.href = "@@@"
+      this.fetchFiles()      
     }
+  }
 
   handelFileDelete = () => {
-    this.fetchFiles()
+    if (this.props.useParams === true) {
+      
+      this.fetchFiles(this.props.path["path"].replaceAll("@@@", "/"))
+    } else {
+      this.fetchFiles()      
+    }
   }
 
   updateFiles = () => {
-    this.fetchFiles()
+    if (this.props.useParams === true) {
+      
+      this.fetchFiles(this.props.path["path"].replaceAll("@@@", "/"))
+    } else {
+      this.fetchFiles()      
+    }
   }
-  fetchFiles() {
-    fetch(`${host}/files`)
+  
+  fetchFiles(path="/") {
+    if (path != "/") {
+      path = "/" + path
+    }
+    let data = { path: path} 
+    fetch(`${host}/files`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }
+      )
       .then(response => response.json())
       .then(data => {
         this.setState({
-          files: data["files"]
+          files: data["files"],
+          folders: data["dirs"]
         });
       })
       .catch(error => console.error('Fehler beim Abrufen der Dateien:', error));
   }
 
+  pageBackCallback() {
+    if (this.props.useParams === true) {
+      let newPath = this.props.path["path"];
+      newPath = newPath.split("@@@");
+      newPath.pop()
+      newPath.pop()
+      window.location.href = newPath.join("@@@") + "@@@"; 
+    }
+  }
+
+  newFolder() {
+
+  }
   render() {
 
     return (
       <div>
-        <FileUploaderComponent render={this.updateFiles}/>
+        <FileUploaderComponent render={this.updateFiles} path={this.props.path["path"]}/>
+        <div id='navigator'>
+          <Tile child={
+            <div className='center'> 
+              <p>{this.props.useParams ? (this.props.path["path"].replaceAll("@@@", "/")) : "/"}</p>
+            </div>
+          } />
+          <Tile child={
+            <div className='center' onClick={() => {this.pageBackCallback()} }>
+              <img src={arrowBack} alt='back'/>
+            </div>} />
+        </div>
         <div id='FileList'>
+          {this.state.folders.map((folder) => (
+              <File key={folder} name={folder} onDelete={this.updateFiles} file={ false } path={this.props.path["path"]}/>
+            ))}
+
           {this.state.files.map((file) => (
-            <File key={file} name={file} onDelete={this.updateFiles}/>
+            <File key={file} name={file} onDelete={this.updateFiles} file={ true } path={this.props.path["path"]}/>
           ))}
         </div>
       </div>
@@ -158,79 +113,11 @@ class FileList extends React.Component {
 }
 
 
-class FileUploaderComponent extends React.Component {
+function App(props) {
 
-  uploadFile = (files) => {
-    let selectedFiles = Array.from(files)
-    if (selectedFiles.length >= 1) {
-      if (selectedFiles.length > 1) {
-        notify("uploading your files...")
-      } else {
-        notify("uploading your file...")
-      }
-      selectedFiles.forEach(element => {
-        const formData = new FormData();
-        formData.append('file_name', element.name);
-        formData.append('data', element);
-
-        fetch(`${host}/upload`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          this.props.render();          
-          })
-        .catch(error => console.error('Fehler:', error));
-        
-      });
-    } else {
-        notify("No files selected  ")
-    }
-  }
-
-
-  render() {
-    return (
-    <div id='StickyHeader'>
-      <DragDrop uploadFunction={this.uploadFile} />
-    </div>)  
-    }
-}
-
-function DragDrop(props) {
-  const [file, setFile] = useState(null);
-  const handleChange = (file) => {
-    props.uploadFunction(file);
-    setFile(file);
-  };
+  let path = useParams();
   return (
-    <div className='center' id='FileUploadParrent'>
-      <FileUploader
-        children={<p>Upload file or drop it here!</p>}
-        classes="FileInput"
-        handleChange={handleChange}
-        hoverTitle="" 
-        multiple={true}/>
-    </div>
-  );
-}
-
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>Hello world!</div>,
-  },
-]);
-
-function Lachs() {
-  return <h2>laaaaaaaach</h2>
-}
-function App() {
-  return (
-    // <RouterProvider router={router} />
-    <FileList/>
+    <FileList useParams={props.useParams} path={path}/>
   ) 
 
 }

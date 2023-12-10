@@ -28,6 +28,13 @@ async def slow_count():
     files = os.listdir("./in/")
     if files != []:
         for file in files:
+            folder_path = file.split("@@@")
+            folder_path.pop()
+            folder_path = "/".join(folder_path)
+            folder_path = folder_path.replace("@@@", "/") + "/"
+
+            file_name = file.split("@@@")
+            file_name = file_name[-1]
             split_large_file("./in/" + file, "chunks", 10)
             for guild in bot.guilds:
                 for channel in guild.channels:
@@ -42,35 +49,38 @@ async def slow_count():
                             os.remove("./chunks/" + discord_file_pth)
                         os.remove("./in/" + file)
 
-                        with open("files.json", "r+") as data_file:
+                        with open("./files" + folder_path + "files.json", "r+") as data_file:
                             try:
                                 json_file = json.load(data_file)
                             except:
                                 json_file = {}
-                        json_file[file] = message_ids
+                        json_file[file_name] = message_ids
 
-                        with open("files.json", "w") as data_file:
+                        with open("./files" + folder_path + "files.json", "w") as data_file:
                             data_file.write(json.dumps(json_file, indent=4))
 
     with open("files_to_get.txt", "r") as file:
         file_content = file.read()
         empty = file_content == ""
         file.seek(0)
-        files_to_get = [line.strip() for line in file.readlines()]
+        lines = file.readlines()
+        
+        files_to_get = [line.split("###")[1].strip() for line in lines]
+        paths_to_get = [line.split("###")[0].strip() for line in lines]
         
     if empty:
         pass
     else:
-        with open("files.json", "r") as data_file:
-            json_file = json.load(data_file)
         
-    
-        for file_to_get in files_to_get:
+        hallo = range(len(files_to_get))
+        for index in range(len(files_to_get)):
+            with open(paths_to_get[index], "r") as data_file:
+                json_file = json.load(data_file)
             for guild in bot.guilds:
                 for channel in guild.channels:
                     if type(channel) == discord.channel.TextChannel:
                         chunk_count = 1
-                        for msg_id in json_file[file_to_get]:
+                        for msg_id in json_file[files_to_get[index]]:
                             message = await channel.fetch_message(msg_id)     
                             print(message)
                             print(message.attachments[0].url)
@@ -79,7 +89,7 @@ async def slow_count():
                                 chunk_file.write(request.content)
                             chunk_count += 1
                         
-                        combine_chunks("./chunks_to_combine", f"out/{file_to_get}")
+                        combine_chunks("./chunks_to_combine", f"out/{files_to_get[index]}")
         with open("files_to_get.txt", "wb"):
             pass    
 
@@ -93,4 +103,4 @@ async def on_ready():
 
 
 if __name__ == '__main__':
-    bot.run("MTE3ODYwNzcyMTc2MzgzMTg0OQ.GZv00x.7RP--47uZVXDNnnHr1dX_ClfHEWoIqLbMavjMc") 
+    bot.run("") 

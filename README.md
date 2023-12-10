@@ -20,7 +20,7 @@ This project consists of a Discord bot written in Python using the py-cord libra
 2. Install dependencies using `npm install`.
 3. Replace the host var in App.js with your Domain/Host name
 4. Compile everything with `sudo npm run build`
-5. Start the server with `sudo serve builld -p 80`.
+5. Start the server with `sudo node main.js`.
 6. The React app will be accessible at `http://localhost:80`.
 
 ### Usage
