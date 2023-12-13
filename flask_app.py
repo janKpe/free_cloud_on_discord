@@ -2,11 +2,10 @@ from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import json
 import os
-import time
 import shutil
 
 app = Flask(__name__)
-CORS(app, origins=["http://ssh.jan-kupke.de"], support_credentials=True)
+CORS(app, support_credentials=True)
 
 def generate_folder_tree(root_path):
     folder_tree = {'name': os.path.basename(root_path), 'children': []}
@@ -34,6 +33,11 @@ def empty_filder(ordnerpfad):
                 os.unlink(dateipfad)
         except Exception as e:
             print(f"Fehler beim Löschen von {dateipfad}: {e}")
+
+@app.route("/")
+def index():
+    return "jojooo"
+
 
 @app.route('/files/', methods=['POST'])
 def file():
@@ -95,7 +99,6 @@ def download_init():
 
     while not os.path.exists("./out/" + file_name):
         pass
-
     return jsonify({"succes": True})
 
 @app.route("/download_file/")
@@ -119,8 +122,7 @@ def remove_file():
         return jsonify({"error": "Der Parameter 'file_to_remove' fehlt im Request."}), 400
 
     if not json.loads(request.data)['file']:
-        os.remove("./files" + path + key_to_remove + "/files.json")
-        os.rmdir("./files" + path + key_to_remove)
+        shutil.rmtree("./files" + path + key_to_remove)
         return jsonify({"success": True})
 
     else:
@@ -142,3 +144,6 @@ def remove_file():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001)
+
+
+    

@@ -72,7 +72,6 @@ async def slow_count():
         pass
     else:
         
-        hallo = range(len(files_to_get))
         for index in range(len(files_to_get)):
             with open(paths_to_get[index], "r") as data_file:
                 json_file = json.load(data_file)
@@ -103,4 +102,5 @@ async def on_ready():
 
 
 if __name__ == '__main__':
-    bot.run("") 
+    # bot.run(TOKEN) 
+    bot.run(os.environ.get("BOT_TOKEN"))

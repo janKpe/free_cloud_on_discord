@@ -9,8 +9,13 @@ import { FileUploaderComponent } from './components/FileUploaderComponent';
 
 
 export const notify = (message) => toast(message);
-export const host = "http://ssh.jan-kupke.de:5001"
 
+
+// DONT change the folowing line
+export const host = 'https://example.com';
+// if you need to change it to an other domain name write 'host = [your domain]' in an new line 
+// like this
+// host = "http://example.com"
 class FileList extends React.Component {
   constructor(props) {
     super(props);
@@ -53,7 +58,7 @@ class FileList extends React.Component {
       path = "/" + path
     }
     let data = { path: path} 
-    fetch(`${host}/files`, {
+    fetch(`${host}/files/`, {
       method: 'POST',
       body: JSON.stringify(data)
     }

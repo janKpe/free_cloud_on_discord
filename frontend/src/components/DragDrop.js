@@ -31,7 +31,7 @@ export function DragDrop(props) {
     }
   
     let data = { path: props.path, folder_name: folder_name };
-    fetch(`${host}/newFolder`, {
+    fetch(`${host}/newFolder/`, {
       method: 'POST',
       mode: "no-cors",
       headers: {

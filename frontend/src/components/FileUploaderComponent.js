@@ -18,7 +18,7 @@ export class FileUploaderComponent extends React.Component {
         formData.append('path', this.props.path);
         formData.append('data', element);
 
-        fetch(`${host}/upload`, {
+        fetch(`${host}/upload/`, {
           method: 'POST',
           body: formData
         })
