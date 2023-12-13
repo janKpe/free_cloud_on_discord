@@ -1,7 +1,25 @@
 ## Free Cloud on Discord
 
-### Overview
-Discord Cloud is a versatile project comprising a Discord bot developed in Python using the py-cord library and a Flask web api. The bot actively monitors a specified Discord channel for file uploads, intelligently breaks down larger files into manageable chunks, and dispatches them as messages. Meanwhile, the web application provides users with a user-friendly interface for effortless file uploading, downloading, and file management.
+
+<img src="screenshots/discord.png">
+<img src="screenshots/Screenshot 1.png">
+<img src="screenshots/Screenshot 2.png">
+
+
+Welcome to Discord Cloud, a powerful project featuring a Python-based Discord bot utilizing the py-cord library and a Flask web API. This bot is designed to streamline file management within Discord channels, with a frontend powered by React. Here's a brief overview of how it works:
+
+## How it Works
+1. File Uploads: Users can effortlessly upload files through the website.
+
+2. Intelligent Chunking: Uploaded files are intelligently divided into 10 MB chunks, adhering to Discord's upload limit.
+
+3. Message Tracking: The bot stores message IDs where the file chunks are attached.
+
+4. File Download: When users wish to download the file, the bot retrieves and assembles the chunks, allowing for a seamless user experience.
+
+## Project Overview
+In addition to the bot's functionality, the project includes a user-friendly web application powered by Flask on the backend and React on the frontend. This modern and responsive frontend simplifies file uploading, downloading, and overall file management.
+
 
 ### How to Run
 
