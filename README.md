@@ -5,6 +5,7 @@
 <img src="screenshots/Screenshot 1.png">
 <img src="screenshots/Screenshot 2.png">
 
+## Project Overview
 
 Welcome to Discord Cloud, a powerful project featuring a Python-based Discord bot utilizing the py-cord library and a Flask web API. This bot is designed to streamline file management within Discord channels, with a frontend powered by React. Here's a brief overview of how it works:
 
@@ -17,7 +18,7 @@ Welcome to Discord Cloud, a powerful project featuring a Python-based Discord bo
 
 4. File Download: When users wish to download the file, the bot retrieves and assembles the chunks, allowing for a seamless user experience.
 
-## Project Overview
+
 In addition to the bot's functionality, the project includes a user-friendly web application powered by Flask on the backend and React on the frontend. This modern and responsive frontend simplifies file uploading, downloading, and overall file management.
 
 
