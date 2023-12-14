@@ -31,6 +31,7 @@ Before running the bot, make sure to create a Discord bot, invite it to your ser
 1. Build the Docker image with `sudo docker build -t free_cloud_on_discord .`
 2. Run the Docker container with `sudo docker run -p [Port]:80 -e BOT_TOKEN=[Bot token] -e WEB_DOMAIN=[Your Domain (localhost)] free_cloud_on_discord`
 
+If you use other port than 80 include it in WEB_DOMAIN (example.com:[Port])
 If you prefer not to use Docker or need to make code modifications, follow these steps:
 
 #### Discord Bot
