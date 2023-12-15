@@ -1,9 +1,7 @@
 ## Free Cloud on Discord
 
 
-<img src="screenshots/discord.png">
-<img src="screenshots/Screenshot 1.png">
-<img src="screenshots/Screenshot 2.png">
+
 
 ## Project Overview
 
@@ -56,6 +54,14 @@ If you prefer not to use Docker or need to make code modifications, follow these
 1. Install nginx using `sudo apt install nginx`
 2. Place the `nginx.conf` in `/etc/nginx/`
 3. Start nginx with `sudo systemctl start nginx`
+
+## Screenhots
+
+
+<img src="screenshots/discord.png">
+<img src="screenshots/Screenshot 1.png">
+<img src="screenshots/Screenshot 2.png">
+<img src="screenshots/Screenshot 3.png">
 
 ### Contributors
 - Jan Kupke
